@@ -13,9 +13,10 @@ CREATE TABLE "campos" (
   "titulo" varchar NOT NULL,
   "tipo" varchar NOT NULL,
   "hectareas" bigint NOT NULL,
-  "precio_por_hectaria" float NOT NULL,
+  "precio_por_hectarea" float NOT NULL,
   "ciudad" varchar NOT NULL,
-  "provincia" varchar NOT NULL
+  "provincia" varchar NOT NULL,
+  "fecha_creacion" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE INDEX ON "usuarios" ("nombre_usuario");
