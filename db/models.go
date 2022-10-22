@@ -17,7 +17,7 @@ type Campo struct {
 	Titulo            string    `json:"titulo"`
 	Tipo              string    `json:"tipo"`
 	Hectareas         int64     `json:"hectareas"`
-	PrecioPorHectarea float32   `json:"precio_por_hectarea"`
+	PrecioPorHectarea int64     `json:"precio_por_hectarea"`
 	Ciudad            string    `json:"ciudad"`
 	Provincia         string    `json:"provincia"`
 	FechaCreacion     time.Time `json:"fecha_creacion"`
