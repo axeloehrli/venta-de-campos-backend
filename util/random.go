@@ -31,22 +31,46 @@ func RandomString(n int) string {
 	return sb.String()
 }
 
-// RandomNombreUsuario generates a random username
+// Data for usuarios table
+
 func RandomNombreUsuario() string {
 	return fmt.Sprintf("%s_%s", RandomString(4), RandomString(4))
 }
 
-// RandomNombreUsuario generates a random name
 func RandomNombre() string {
 	return RandomString(6)
 }
 
-// RandomNombreUsuario generates a random surname
 func RandomApellido() string {
 	return RandomString(8)
 }
 
-// RandomEmail generates a random email
 func RandomEmail() string {
 	return fmt.Sprintf("%s@gmail.com", RandomString(6))
+}
+
+// Data for campos table
+
+func RandomTitulo() string {
+	return fmt.Sprintf("%s %s", RandomString(4), RandomString(6))
+}
+func RandomTipo() string {
+	tipos := []string{"Ganadero", "Agrícola", "Mixto"}
+	n := len(tipos)
+	return tipos[rand.Intn(n)]
+}
+func RandomHectareas() int64 {
+	return RandomInt(100, 2000)
+}
+
+func RandomPrecioPorHectarea() int64 {
+	return RandomInt(1000, 20000)
+}
+
+func RandomCiudad() string {
+	return RandomString(6)
+}
+
+func RandomProvincia() string {
+	return RandomString(8)
 }
