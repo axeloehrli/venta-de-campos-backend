@@ -56,20 +56,20 @@ func GetUsuario(ctx context.Context, id int64, db *sql.DB) (Usuario, error) {
 	return u, err
 }
 
-const getUsuarios = `
+const listUsuarios = `
 SELECT * FROM usuarios
 ORDER BY id
 LIMIT $1
 OFFSET $2
 `
 
-type GetUsuariosParams struct {
+type ListUsuariosParams struct {
 	Limit  int32 `json:"limit"`
 	Offset int32 `json:"offset"`
 }
 
-func GetUsuarios(ctx context.Context, arg GetUsuariosParams, db *sql.DB) ([]Usuario, error) {
-	rows, err := db.QueryContext(ctx, getUsuarios, arg.Limit, arg.Offset)
+func ListUsuarios(ctx context.Context, arg ListUsuariosParams, db *sql.DB) ([]Usuario, error) {
+	rows, err := db.QueryContext(ctx, listUsuarios, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

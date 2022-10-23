@@ -115,15 +115,15 @@ func TestDeleteCampo(t *testing.T) {
 	}
 }
 
-func TestGetCampos(t *testing.T) {
+func TestListCampos(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		createRandomCampo(t)
 	}
-	arg := GetCamposParams{
+	arg := ListCamposParams{
 		Limit:  5,
 		Offset: 5,
 	}
-	campos, err := GetCampos(context.Background(), arg, database)
+	campos, err := ListCampos(context.Background(), arg, database)
 
 	if err != nil {
 		t.Fatalf("THERE WAS AN ERROR: %v", err)

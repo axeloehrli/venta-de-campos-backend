@@ -96,15 +96,15 @@ func TestDeleteUsuario(t *testing.T) {
 	}
 }
 
-func TestGetUsuarios(t *testing.T) {
+func TestListUsuarios(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		createRandomUsuario(t)
 	}
-	arg := GetUsuariosParams{
+	arg := ListUsuariosParams{
 		Limit:  5,
 		Offset: 5,
 	}
-	usuarios, err := GetUsuarios(context.Background(), arg, database)
+	usuarios, err := ListUsuarios(context.Background(), arg, database)
 
 	if err != nil {
 		t.Fatalf("THERE WAS AN ERROR: %v", err)

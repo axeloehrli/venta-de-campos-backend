@@ -78,20 +78,20 @@ func GetCampo(ctx context.Context, id int64, db *sql.DB) (Campo, error) {
 	return c, err
 }
 
-const getCampos = `
+const listCampos = `
 SELECT * FROM campos
 ORDER BY id
 LIMIT $1
 OFFSET $2
 `
 
-type GetCamposParams struct {
+type ListCamposParams struct {
 	Limit  int32 `json:"limit"`
 	Offset int32 `json:"offset"`
 }
 
-func GetCampos(ctx context.Context, arg GetCamposParams, db *sql.DB) ([]Campo, error) {
-	rows, err := db.QueryContext(ctx, getCampos, arg.Limit, arg.Offset)
+func ListCampos(ctx context.Context, arg ListCamposParams, db *sql.DB) ([]Campo, error) {
+	rows, err := db.QueryContext(ctx, listCampos, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
