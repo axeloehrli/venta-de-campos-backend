@@ -3,29 +3,25 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 	"testing"
 
+	"github.com/axeloehrli/venta-de-campos-backend/util"
 	_ "github.com/lib/pq"
-)
-
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "root"
-	password = "secret"
-	dbname   = "venta-de-campos-backend"
 )
 
 // Create DB instance which will be used for package tests
 var database *sql.DB
 
-var err error
-
 func TestMain(m *testing.M) {
+	config, err := util.LoadConfig("../")
+	if err != nil {
+		log.Fatal("Cannot load config: ", err)
+	}
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+		config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName)
 
 	database, err = sql.Open("postgres", psqlInfo)
 	if err != nil {

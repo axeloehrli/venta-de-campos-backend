@@ -3,23 +3,21 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	"github.com/axeloehrli/venta-de-campos-backend/api"
+	"github.com/axeloehrli/venta-de-campos-backend/util"
 	_ "github.com/lib/pq"
 )
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "root"
-	password = "secret"
-	dbname   = "venta-de-campos-backend"
-)
-
 func main() {
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Fatal("Cannot load config: ", err)
+	}
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+		config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName)
 	database, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		panic(err)
