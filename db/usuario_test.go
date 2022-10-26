@@ -10,12 +10,12 @@ import (
 
 func createRandomUsuario(t *testing.T) Usuario {
 	arg := CreateUsuarioParams{
-		NombreUsuario: util.RandomNombreUsuario(),
-		Nombre:        util.RandomNombre(),
-		Apellido:      util.RandomApellido(),
-		Email:         util.RandomEmail(),
+		NombreUsuario:  util.RandomNombreUsuario(),
+		HashedPassword: "secret",
+		Nombre:         util.RandomNombre(),
+		Apellido:       util.RandomApellido(),
+		Email:          util.RandomEmail(),
 	}
-
 	usuario, err := CreateUsuario(context.Background(), arg, database)
 	if err != nil {
 		t.Fatalf("THERE WAS AN ERROR: %v", err)
@@ -25,6 +25,9 @@ func createRandomUsuario(t *testing.T) Usuario {
 	}
 	if arg.NombreUsuario != usuario.NombreUsuario {
 		t.Fatalf("DIFFERENT NOMBRE USUARIO")
+	}
+	if arg.HashedPassword != usuario.HashedPassword {
+		t.Fatalf("DIFFERENT HASHED PASSWORD")
 	}
 	if arg.Nombre != usuario.Nombre {
 		t.Fatalf("DIFFERENT NOMBRE")
@@ -37,6 +40,9 @@ func createRandomUsuario(t *testing.T) Usuario {
 	}
 	if usuario.ID == 0 {
 		t.Fatalf("INVALID ID")
+	}
+	if usuario.PasswordChangedAt.IsZero() == false {
+		t.Fatalf("INVALID PASSWORD CHANGED AT")
 	}
 	if usuario.FechaCreacion.IsZero() {
 		t.Fatalf("INVALID FECHA CREACION")
@@ -58,6 +64,12 @@ func TestGetUsuario(t *testing.T) {
 	}
 	if usuario2.NombreUsuario != usuario1.NombreUsuario {
 		t.Fatalf("DIFFERENT NOMBRE USUARIO")
+	}
+	if usuario2.HashedPassword != usuario1.HashedPassword {
+		t.Fatalf("DIFFERENT HASHED PASSWORD")
+	}
+	if usuario2.PasswordChangedAt != usuario1.PasswordChangedAt {
+		t.Fatal("DIFFERENT PASSWORD CHANGED AT")
 	}
 	if usuario2.Nombre != usuario1.Nombre {
 		t.Fatalf("DIFFERENT NOMBRE")

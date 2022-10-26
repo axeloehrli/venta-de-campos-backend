@@ -10,10 +10,11 @@ import (
 )
 
 type createUsuarioRequest struct {
-	NombreUsuario string `json:"nombre_usuario" binding:"required"`
-	Nombre        string `json:"nombre" binding:"required"`
-	Apellido      string `json:"apellido" binding:"required"`
-	Email         string `json:"email" binding:"required"`
+	NombreUsuario  string `json:"nombre_usuario" binding:"required"`
+	HashedPassword string `json:"hashed_password" binding:"required"`
+	Nombre         string `json:"nombre" binding:"required"`
+	Apellido       string `json:"apellido" binding:"required"`
+	Email          string `json:"email" binding:"required"`
 }
 
 func (server *Server) createUsuario(ctx *gin.Context) {
@@ -24,10 +25,11 @@ func (server *Server) createUsuario(ctx *gin.Context) {
 	}
 
 	arg := db.CreateUsuarioParams{
-		NombreUsuario: req.NombreUsuario,
-		Nombre:        req.Nombre,
-		Apellido:      req.Apellido,
-		Email:         req.Email,
+		NombreUsuario:  req.NombreUsuario,
+		HashedPassword: req.HashedPassword,
+		Nombre:         req.Nombre,
+		Apellido:       req.Apellido,
+		Email:          req.Email,
 	}
 
 	u, err := db.CreateUsuario(context.Background(), arg, server.db)

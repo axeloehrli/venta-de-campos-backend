@@ -3,12 +3,14 @@ package db
 import "time"
 
 type Usuario struct {
-	ID            int64     `json:"id"`
-	NombreUsuario string    `json:"nombre_usuario"`
-	Nombre        string    `json:"nombre"`
-	Apellido      string    `json:"apellido"`
-	Email         string    `json:"email"`
-	FechaCreacion time.Time `json:"fecha_creacion"`
+	ID                int64     `json:"id"`
+	NombreUsuario     string    `json:"nombre_usuario"`
+	HashedPassword    string    `json:"hashed_password"`
+	PasswordChangedAt time.Time `json:"password_changed_at"`
+	Nombre            string    `json:"nombre"`
+	Apellido          string    `json:"apellido"`
+	Email             string    `json:"email"`
+	FechaCreacion     time.Time `json:"fecha_creacion"`
 }
 
 type Campo struct {

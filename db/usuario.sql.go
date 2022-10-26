@@ -8,27 +8,31 @@ import (
 const createUsuario = `
 INSERT INTO usuarios (
   nombre_usuario,
+	hashed_password,
   nombre,
   apellido,
 	email
 ) VALUES (
-  $1, $2, $3, $4
+  $1, $2, $3, $4, $5
 ) RETURNING *
 `
 
 type CreateUsuarioParams struct {
-	NombreUsuario string `json:"nombre_usuario"`
-	Nombre        string `json:"nombre"`
-	Apellido      string `json:"apellido"`
-	Email         string `json:"email"`
+	NombreUsuario  string `json:"nombre_usuario"`
+	HashedPassword string `json:"hashed_password"`
+	Nombre         string `json:"nombre"`
+	Apellido       string `json:"apellido"`
+	Email          string `json:"email"`
 }
 
 func CreateUsuario(ctx context.Context, arg CreateUsuarioParams, db *sql.DB) (Usuario, error) {
-	row := db.QueryRowContext(ctx, createUsuario, arg.NombreUsuario, arg.Nombre, arg.Apellido, arg.Email)
+	row := db.QueryRowContext(ctx, createUsuario, arg.NombreUsuario, arg.HashedPassword, arg.Nombre, arg.Apellido, arg.Email)
 	var u Usuario
 	err := row.Scan(
 		&u.ID,
 		&u.NombreUsuario,
+		&u.HashedPassword,
+		&u.PasswordChangedAt,
 		&u.Nombre,
 		&u.Apellido,
 		&u.Email,
@@ -48,6 +52,8 @@ func GetUsuario(ctx context.Context, id int64, db *sql.DB) (Usuario, error) {
 	err := row.Scan(
 		&u.ID,
 		&u.NombreUsuario,
+		&u.HashedPassword,
+		&u.PasswordChangedAt,
 		&u.Nombre,
 		&u.Apellido,
 		&u.Email,
@@ -80,6 +86,8 @@ func ListUsuarios(ctx context.Context, arg ListUsuariosParams, db *sql.DB) ([]Us
 		if err := rows.Scan(
 			&i.ID,
 			&i.NombreUsuario,
+			&i.HashedPassword,
+			&i.PasswordChangedAt,
 			&i.Nombre,
 			&i.Apellido,
 			&i.Email,
