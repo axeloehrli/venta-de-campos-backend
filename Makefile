@@ -13,6 +13,9 @@ migrateup:
 migratedown:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/venta-de-campos-backend?sslmode=disable" -verbose down	
 
+server:
+	go run main.go
+
 test:
 	go test -v -cover ./...
 	
