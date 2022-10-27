@@ -9,9 +9,13 @@ import (
 )
 
 func createRandomUsuario(t *testing.T) Usuario {
+	hashedPassword, err := util.HashPassword(util.RandomString(6))
+	if err != nil {
+		t.Fatalf("ERROR HASHING PASSWORD: %v", err)
+	}
 	arg := CreateUsuarioParams{
 		NombreUsuario:  util.RandomNombreUsuario(),
-		HashedPassword: "secret",
+		HashedPassword: hashedPassword,
 		Nombre:         util.RandomNombre(),
 		Apellido:       util.RandomApellido(),
 		Email:          util.RandomEmail(),

@@ -4,17 +4,30 @@ import (
 	"context"
 	"database/sql"
 	"net/http"
+	"time"
 
 	"github.com/axeloehrli/venta-de-campos-backend/db"
+	"github.com/axeloehrli/venta-de-campos-backend/util"
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 )
 
 type createUsuarioRequest struct {
-	NombreUsuario  string `json:"nombre_usuario" binding:"required"`
-	HashedPassword string `json:"hashed_password" binding:"required"`
-	Nombre         string `json:"nombre" binding:"required"`
-	Apellido       string `json:"apellido" binding:"required"`
-	Email          string `json:"email" binding:"required"`
+	NombreUsuario string `json:"nombre_usuario" binding:"required"`
+	Password      string `json:"password" binding:"required,min=6"`
+	Nombre        string `json:"nombre" binding:"required"`
+	Apellido      string `json:"apellido" binding:"required"`
+	Email         string `json:"email" binding:"required,email"`
+}
+
+type createUsuarioResponse struct {
+	ID                int64     `json:"id"`
+	NombreUsuario     string    `json:"nombre_usuario"`
+	PasswordChangedAt time.Time `json:"password_changed_at"`
+	Nombre            string    `json:"nombre"`
+	Apellido          string    `json:"apellido"`
+	Email             string    `json:"email"`
+	FechaCreacion     time.Time `json:"fecha_creacion"`
 }
 
 func (server *Server) createUsuario(ctx *gin.Context) {
@@ -23,10 +36,15 @@ func (server *Server) createUsuario(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 		return
 	}
+	hashedPassword, err := util.HashPassword(req.Password)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+		return
+	}
 
 	arg := db.CreateUsuarioParams{
 		NombreUsuario:  req.NombreUsuario,
-		HashedPassword: req.HashedPassword,
+		HashedPassword: hashedPassword,
 		Nombre:         req.Nombre,
 		Apellido:       req.Apellido,
 		Email:          req.Email,
@@ -35,11 +53,26 @@ func (server *Server) createUsuario(ctx *gin.Context) {
 	u, err := db.CreateUsuario(context.Background(), arg, server.db)
 
 	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok {
+			switch pqErr.Code.Name() {
+			case "unique_violation":
+				ctx.JSON(http.StatusForbidden, ErrorResponse(err))
+				return
+			}
+		}
 		ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 		return
 	}
-
-	ctx.JSON(http.StatusOK, u)
+	res := createUsuarioResponse{
+		ID:                u.ID,
+		NombreUsuario:     u.NombreUsuario,
+		PasswordChangedAt: u.PasswordChangedAt,
+		Nombre:            u.Nombre,
+		Apellido:          u.Apellido,
+		Email:             u.Email,
+		FechaCreacion:     u.FechaCreacion,
+	}
+	ctx.JSON(http.StatusOK, res)
 }
 
 type getUsuarioRequest struct {
