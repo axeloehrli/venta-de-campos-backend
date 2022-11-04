@@ -23,6 +23,7 @@ func NewServer(db *sql.DB) *Server {
 	router.POST("/campos", server.createCampo)
 	router.GET("/campos/:id", server.getCampo)
 	router.GET("/campos", server.listCampos)
+	router.GET("/filtered-campos", server.listFilteredCampos)
 	router.DELETE("/campos/:id", server.deleteCampo)
 
 	server.router = router

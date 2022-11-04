@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/axeloehrli/venta-de-campos-backend/db"
+	"github.com/axeloehrli/venta-de-campos-backend/util"
 	"github.com/gin-gonic/gin"
 )
 
@@ -105,6 +106,36 @@ func (server *Server) listCampos(ctx *gin.Context) {
 		Offset: (req.PageID - 1) * req.PageSize,
 	}
 	c, err := db.ListCampos(context.Background(), arg, server.db)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, c)
+}
+
+type listFilteredCamposRequest struct {
+	PageID               int32   `form:"page_id" binding:"required,min=1"`
+	PageSize             int32   `form:"page_size" binding:"required,min=5,max=10"`
+	Provincia            *string `form:"provincia"`
+	PrecioPorHectareaMin *int64  `form:"precio_por_hectarea_min"`
+	PrecioPorHectareaMax *int64  `form:"precio_por_hectarea_max"`
+	HectareasMin         *int64  `form:"hectareas_min"`
+	HectareasMax         *int64  `form:"hectareas_max"`
+}
+
+func (server *Server) listFilteredCampos(ctx *gin.Context) {
+	var req listFilteredCamposRequest
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
+		return
+	}
+	filtersMap := util.FiltersStructToMap(req)
+
+	dynamicQuery := util.BuildDynamicCamposQuery(filtersMap, req.PageSize, (req.PageID-1)*req.PageSize)
+
+	c, err := db.ListFilteredCampos(context.Background(), dynamicQuery, server.db)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))

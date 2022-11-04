@@ -78,6 +78,40 @@ func GetCampo(ctx context.Context, id int64, db *sql.DB) (Campo, error) {
 	return c, err
 }
 
+func ListFilteredCampos(ctx context.Context, dynamicQuery string, db *sql.DB) ([]Campo, error) {
+	rows, err := db.QueryContext(ctx, dynamicQuery)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	items := []Campo{}
+	for rows.Next() {
+		var c Campo
+		if err := rows.Scan(
+			&c.ID,
+			&c.IDUsuario,
+			&c.Titulo,
+			&c.Tipo,
+			&c.Hectareas,
+			&c.PrecioPorHectarea,
+			&c.Ciudad,
+			&c.Provincia,
+			&c.FechaCreacion,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, c)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listCampos = `
 SELECT * FROM campos
 ORDER BY id
