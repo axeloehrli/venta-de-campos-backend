@@ -13,6 +13,7 @@ import (
 type createCampoRequest struct {
 	IDUsuario         int64  `json:"id_usuario" binding:"required"`
 	Titulo            string `json:"titulo" binding:"required"`
+	Descripcion       string `json:"descripcion" binding:"required"`
 	Tipo              string `json:"tipo" binding:"required"`
 	Hectareas         int64  `json:"hectareas" binding:"required,min=1"`
 	PrecioPorHectarea int64  `json:"precio_por_hectarea" binding:"required,min=1"`
@@ -30,6 +31,7 @@ func (server *Server) createCampo(ctx *gin.Context) {
 	arg := db.CreateCampoParams{
 		IDUsuario:         req.IDUsuario,
 		Titulo:            req.Titulo,
+		Descripcion:       req.Descripcion,
 		Tipo:              req.Tipo,
 		Hectareas:         req.Hectareas,
 		PrecioPorHectarea: req.PrecioPorHectarea,

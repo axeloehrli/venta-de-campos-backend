@@ -14,6 +14,7 @@ func createRandomCampo(t *testing.T) Campo {
 	arg := CreateCampoParams{
 		IDUsuario:         usuario.ID,
 		Titulo:            util.RandomTitulo(),
+		Descripcion:       util.RandomString(30),
 		Tipo:              util.RandomTipo(),
 		Hectareas:         util.RandomHectareas(),
 		PrecioPorHectarea: util.RandomPrecioPorHectarea(),
@@ -35,6 +36,9 @@ func createRandomCampo(t *testing.T) Campo {
 	}
 	if arg.Titulo != campo.Titulo {
 		t.Fatalf("DIFFERENT TITULO")
+	}
+	if arg.Descripcion != campo.Descripcion {
+		t.Fatalf("DIFFERENT DESCRIPCION")
 	}
 	if arg.Tipo != campo.Tipo {
 		t.Fatalf("DIFFERENT TIPO")
@@ -74,6 +78,9 @@ func TestGetCampo(t *testing.T) {
 	}
 	if campo2.Titulo != campo1.Titulo {
 		t.Fatalf("DIFFERENT TITULO")
+	}
+	if campo2.Descripcion != campo1.Descripcion {
+		t.Fatalf("DIFFERENT DESCRIPCION")
 	}
 	if campo2.Tipo != campo1.Tipo {
 		t.Fatalf("DIFFERENT TIPO")

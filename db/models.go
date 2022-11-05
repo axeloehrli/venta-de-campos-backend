@@ -17,6 +17,7 @@ type Campo struct {
 	ID                int64     `json:"id"`
 	IDUsuario         int64     `json:"id_usuario"`
 	Titulo            string    `json:"titulo"`
+	Descripcion       string    `json:"descripcion"`
 	Tipo              string    `json:"tipo"`
 	Hectareas         int64     `json:"hectareas"`
 	PrecioPorHectarea int64     `json:"precio_por_hectarea"`

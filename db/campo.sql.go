@@ -9,19 +9,21 @@ const createCampo = `
 INSERT INTO campos (
   id_usuario,
   titulo,
+	descripcion,
   tipo,
 	hectareas,
 	precio_por_hectarea,
 	ciudad,
 	provincia
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7
+  $1, $2, $3, $4, $5, $6, $7, $8
 ) RETURNING *
 `
 
 type CreateCampoParams struct {
 	IDUsuario         int64  `json:"id_usuario"`
 	Titulo            string `json:"titulo"`
+	Descripcion       string `json:"descripcion"`
 	Tipo              string `json:"tipo"`
 	Hectareas         int64  `json:"hectareas"`
 	PrecioPorHectarea int64  `json:"precio_por_hectarea"`
@@ -35,6 +37,7 @@ func CreateCampo(ctx context.Context, arg CreateCampoParams, db *sql.DB) (Campo,
 		createCampo,
 		arg.IDUsuario,
 		arg.Titulo,
+		arg.Descripcion,
 		arg.Tipo,
 		arg.Hectareas,
 		arg.PrecioPorHectarea,
@@ -46,6 +49,7 @@ func CreateCampo(ctx context.Context, arg CreateCampoParams, db *sql.DB) (Campo,
 		&c.ID,
 		&c.IDUsuario,
 		&c.Titulo,
+		&c.Descripcion,
 		&c.Tipo,
 		&c.Hectareas,
 		&c.PrecioPorHectarea,
@@ -68,6 +72,7 @@ func GetCampo(ctx context.Context, id int64, db *sql.DB) (Campo, error) {
 		&c.ID,
 		&c.IDUsuario,
 		&c.Titulo,
+		&c.Descripcion,
 		&c.Tipo,
 		&c.Hectareas,
 		&c.PrecioPorHectarea,
@@ -92,6 +97,7 @@ func ListFilteredCampos(ctx context.Context, dynamicQuery string, db *sql.DB) ([
 			&c.ID,
 			&c.IDUsuario,
 			&c.Titulo,
+			&c.Descripcion,
 			&c.Tipo,
 			&c.Hectareas,
 			&c.PrecioPorHectarea,
@@ -137,6 +143,7 @@ func ListCampos(ctx context.Context, arg ListCamposParams, db *sql.DB) ([]Campo,
 			&c.ID,
 			&c.IDUsuario,
 			&c.Titulo,
+			&c.Descripcion,
 			&c.Tipo,
 			&c.Hectareas,
 			&c.PrecioPorHectarea,

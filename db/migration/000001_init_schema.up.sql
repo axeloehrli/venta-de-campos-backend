@@ -13,6 +13,7 @@ CREATE TABLE "campos" (
   "id" bigserial PRIMARY KEY NOT NULL,
   "id_usuario" bigint NOT NULL,
   "titulo" varchar NOT NULL,
+  "descripcion" varchar NOT NULL,
   "tipo" varchar NOT NULL,
   "hectareas" bigint NOT NULL,
   "precio_por_hectarea" bigint NOT NULL,
