@@ -43,11 +43,11 @@ func CreateUsuario(ctx context.Context, arg CreateUsuarioParams, db *sql.DB) (Us
 
 const getUsuario = `
 SELECT * FROM usuarios
-WHERE id = $1 LIMIT 1
+WHERE nombre_usuario = $1 LIMIT 1
 `
 
-func GetUsuario(ctx context.Context, id int64, db *sql.DB) (Usuario, error) {
-	row := db.QueryRowContext(ctx, getUsuario, id)
+func GetUsuario(ctx context.Context, nombreUsuario string, db *sql.DB) (Usuario, error) {
+	row := db.QueryRowContext(ctx, getUsuario, nombreUsuario)
 	var u Usuario
 	err := row.Scan(
 		&u.ID,

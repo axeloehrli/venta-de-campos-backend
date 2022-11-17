@@ -40,7 +40,7 @@ func FiltersStructToMap(myStruct any) map[string]any {
 	return filtersMap
 }
 
-func BuildDynamicCamposQuery(filtersMap map[string]any, limit int32, offset int32) string {
+func BuildConditionsString(filtersMap map[string]any) string {
 
 	count := 0
 
@@ -116,6 +116,6 @@ func BuildDynamicCamposQuery(filtersMap map[string]any, limit int32, offset int3
 			}
 		}
 	}
-	fullCondition := fmt.Sprintf("SELECT * FROM campos %v LIMIT %v OFFSET %v", strings.Join(conditions, " "), limit, offset)
+	fullCondition := strings.Join(conditions, " ")
 	return fullCondition
 }

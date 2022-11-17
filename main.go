@@ -29,6 +29,10 @@ func main() {
 		panic(err)
 	}
 
-	server := api.NewServer(database)
+	server, err := api.NewServer(config, database)
+
+	if err != nil {
+		log.Fatal("cannot create server: ", err)
+	}
 	server.Start()
 }

@@ -10,7 +10,6 @@ import (
 
 func createRandomCampo(t *testing.T) Campo {
 	usuario := createRandomUsuario(t)
-
 	arg := CreateCampoParams{
 		IDUsuario:         usuario.ID,
 		Titulo:            util.RandomTitulo(),
@@ -62,6 +61,12 @@ func createRandomCampo(t *testing.T) Campo {
 		t.Fatalf("INVALID FECHA CREACION")
 	}
 	return campo
+}
+
+func TestPopulateDatabase(t *testing.T) {
+	for i := 0; i < 250; i++ {
+		createRandomCampo(t)
+	}
 }
 func TestCreateCampo(t *testing.T) {
 	createRandomCampo(t)

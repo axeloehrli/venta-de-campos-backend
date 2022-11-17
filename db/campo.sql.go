@@ -82,7 +82,15 @@ func GetCampo(ctx context.Context, id int64, db *sql.DB) (Campo, error) {
 	)
 	return c, err
 }
-
+func GetFilteredCamposCount(ctx context.Context, dynamicQuery string, db *sql.DB) (int32, error) {
+	row := db.QueryRowContext(ctx, dynamicQuery)
+	var count int32
+	err := row.Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
 func ListFilteredCampos(ctx context.Context, dynamicQuery string, db *sql.DB) ([]Campo, error) {
 	rows, err := db.QueryContext(ctx, dynamicQuery)
 	if err != nil {

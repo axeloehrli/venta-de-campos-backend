@@ -54,6 +54,11 @@ func RandomEmail() string {
 func RandomTitulo() string {
 	return fmt.Sprintf("%s %s", RandomString(4), RandomString(6))
 }
+func RandomProvincia() string {
+	tipos := []string{"Misiones", "San Luis", "San Juan", "Entre Ríos", "Santa Cruz", "Río Negro", "Chubut", "Córdoba", "Mendoza", "La Rioja", "Catamarca", "La Pampa", "Santiago del Estero", "Corrientes", "Santa Fe", "Tucumán", "Neuquén", "Salta", "Chaco", "Formosa", "Jujuy", "Buenos Aires", "Tierra del Fuego"}
+	n := len(tipos)
+	return tipos[rand.Intn(n)]
+}
 func RandomTipo() string {
 	tipos := []string{"Ganadero", "Agrícola", "Mixto"}
 	n := len(tipos)
@@ -69,8 +74,4 @@ func RandomPrecioPorHectarea() int64 {
 
 func RandomCiudad() string {
 	return RandomString(6)
-}
-
-func RandomProvincia() string {
-	return RandomString(8)
 }

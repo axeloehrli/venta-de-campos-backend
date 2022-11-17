@@ -59,7 +59,7 @@ func TestCreateUsuario(t *testing.T) {
 
 func TestGetUsuario(t *testing.T) {
 	usuario1 := createRandomUsuario(t)
-	usuario2, err := GetUsuario(context.Background(), usuario1.ID, database)
+	usuario2, err := GetUsuario(context.Background(), usuario1.NombreUsuario, database)
 	if err != nil {
 		t.Fatalf("THERE WAS AN ERROR: %v", err)
 	}
@@ -97,7 +97,7 @@ func TestDeleteUsuario(t *testing.T) {
 		t.Fatalf("ERROR DELETING USUARIO: %v", err)
 	}
 
-	usuario2, err := GetUsuario(context.Background(), usuario1.ID, database)
+	usuario2, err := GetUsuario(context.Background(), usuario1.NombreUsuario, database)
 
 	if err == nil {
 		t.Fatalf("ACCOUNT NOT SUCCESFULLY DELETED: %v", err)

@@ -2,33 +2,75 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
+	"net/http"
 
+	"github.com/axeloehrli/venta-de-campos-backend/token"
+	"github.com/axeloehrli/venta-de-campos-backend/util"
 	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
-	db     *sql.DB
-	router *gin.Engine
+	config     util.Config
+	db         *sql.DB
+	tokenMaker token.Maker
+	router     *gin.Engine
 }
 
-func NewServer(db *sql.DB) *Server {
-	server := &Server{db: db}
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
+}
+
+func NewServer(config util.Config, db *sql.DB) (*Server, error) {
+	tokenMaker, err := token.NewJWTMaker(config.TokenSymmetricKey)
+	if err != nil {
+		return nil, fmt.Errorf("cannot create token maker: %v", err)
+	}
+	server := &Server{
+		config:     config,
+		db:         db,
+		tokenMaker: tokenMaker,
+	}
+
+	server.SetupRouter()
+	return server, nil
+}
+
+func (server *Server) SetupRouter() {
 	router := gin.Default()
+	router.Use(CORSMiddleware())
 	router.POST("/usuarios", server.createUsuario)
-	router.GET("/usuarios/:id", server.getUsuario)
-	router.GET("/usuarios", server.listUsuarios)
-	router.DELETE("/usuarios/:id", server.deleteUsuario)
-
-	router.POST("/campos", server.createCampo)
-	router.GET("/campos/:id", server.getCampo)
+	router.POST("/usuarios/login", server.loginUsuario)
 	router.GET("/campos", server.listCampos)
 	router.GET("/filtered-campos", server.listFilteredCampos)
-	router.DELETE("/campos/:id", server.deleteCampo)
+	router.GET("/filtered-campos-count", server.getFilteredCamposCount)
+
+	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
+	authRoutes.GET("/verify", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, "success")
+	})
+	authRoutes.GET("/usuarios/:nombre_usuario", server.getUsuario)
+	authRoutes.GET("/usuarios", server.listUsuarios)
+	authRoutes.DELETE("/usuarios/:id", server.deleteUsuario)
+
+	authRoutes.POST("/campos", server.createCampo)
+	authRoutes.GET("/campos/:id", server.getCampo)
+
+	authRoutes.DELETE("/campos/:id", server.deleteCampo)
 
 	server.router = router
-
-	return server
 }
 
 func (server *Server) Start() error {
