@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -156,7 +157,9 @@ type loginUsuarioResponse struct {
 func (server *Server) loginUsuario(ctx *gin.Context) {
 	var req loginUsuarioRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
+		fmt.Println("BAD REQ")
 		ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
+		return
 	}
 	u, err := db.GetUsuario(context.Background(), req.NombreUsuario, server.db)
 

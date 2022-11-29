@@ -59,7 +59,7 @@ func (server *Server) SetupRouter() {
 
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 	authRoutes.GET("/verify", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, "success")
+		ctx.Status(http.StatusOK)
 	})
 	authRoutes.GET("/usuarios/:nombre_usuario", server.getUsuario)
 	authRoutes.GET("/usuarios", server.listUsuarios)
